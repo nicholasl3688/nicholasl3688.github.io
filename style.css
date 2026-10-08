@@ -6,7 +6,7 @@
   - No cards, shadows, gradients, or icons.
   - Left-aligned single column, about 60 characters per line.
   - Section labels are italic and muted. Dates use old-style numerals.
-  - The only moving part is the scroll rail in the right margin (wide screens only).
+  - The only moving part is the vine rail in the right margin (wide screens only).
 */
 
 :root {
@@ -46,16 +46,16 @@ main {
 }
 
 /* With the rail showing, center the column + gap + rail as one block
-   (720 + 96 + 100) so the whitespace on both sides matches. 100px is the
-   width of the longest rail label; bump it if you add a longer one. */
+   (720 + 96 + 116) so the whitespace on both sides matches. 116px is the
+   vine plus the longest label; bump it if you add a longer label. */
 @media (min-width: 1180px) {
-  .rail-ready main { margin-left: calc((100% - 916px) / 2); }
+  .rail-ready main { margin-left: calc((100% - 932px) / 2); }
 }
 
 /* At 1320px+ dates hang in the left margin (140px wide + 32px gap), so the
-   centered block grows to 172 + 916 = 1088px. */
+   centered block grows to 172 + 932 = 1104px. */
 @media (min-width: 1320px) {
-  .rail-ready main { margin-left: calc((100% - 1088px) / 2 + 172px); }
+  .rail-ready main { margin-left: calc((100% - 1104px) / 2 + 172px); }
 }
 
 p { margin: 0 0 0.75rem; text-wrap: pretty; }
@@ -175,62 +175,42 @@ footer p { margin: 0 0 0.25rem; }
   .skills dt { text-align: right; }
 }
 
-/* Scroll rail. rail.js positions the labels and drives the fill. */
+/* Vine rail. rail.js draws the stem and leaves and places the labels. */
 .rail-wrap {
   display: none;
   position: absolute;
   top: 88px;
   bottom: 72px;
   left: calc(100% + 96px);
-  width: 100px;
+  width: 116px;
 }
 @media (min-width: 1180px) {
   .rail-ready .rail-wrap { display: block; }
 }
 .rail { position: sticky; top: 88px; height: var(--rail-h, 560px); }
-.rail-track, .rail-fill, .rail-dot { position: absolute; left: 0; top: 0; }
-.rail-track { bottom: 0; width: 1px; background: var(--line); }
-.rail-fill {
-  left: -0.5px;
-  width: 2px;
-  height: 100%;
-  background: var(--accent);
-  transform-origin: top;
-  transform: scaleY(0);
+.rail svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.vine-stem { fill: none; stroke: var(--line); stroke-width: 1.75; stroke-linecap: round; }
+.vine-stem.is-grown { stroke: var(--accent); }
+.vine-leaf {
+  fill: var(--paper);
+  stroke: var(--tick);
+  stroke-width: 1;
+  transform: scale(0.55);
+  transition: transform 350ms ease-out, fill 350ms ease-out, stroke 350ms ease-out;
 }
-.rail-dot {
-  left: -3.5px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-}
+.vine-leaf.is-open { fill: var(--accent); stroke: var(--accent); transform: scale(1); }
 .rail a {
   position: absolute;
-  left: 0;
-  padding-left: 22px;
+  left: 38px;
   transform: translateY(-50%);
   font-size: 1rem;
   line-height: 1.2;
   color: var(--muted);
   text-decoration: none;
 }
-.rail a::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 10px;
-  height: 1px;
-  background: var(--tick);
-  transition: width 150ms ease-out, background-color 150ms ease-out;
-}
 .rail a:hover { color: var(--ink); }
 .rail a.is-past { color: var(--ink); }
-.rail a.is-past::before { background: var(--accent); }
 .rail a.is-current { color: var(--ink); font-style: italic; }
-.rail a.is-current::before { width: 16px; background: var(--accent); }
 
 @media (max-width: 640px) {
   body { font-size: 1.125rem; }
@@ -242,5 +222,5 @@ footer p { margin: 0 0 0.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  a, .rail a::before { transition: none; }
+  a, .vine-leaf { transition: none; }
 }
